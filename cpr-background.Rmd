@@ -220,7 +220,7 @@ influence_of(eg_cp)
 <div style="width: 100%; display: table;">
   <div style="display: table-row">
   <div style="display: table-cell; vertical-align: top;">
-![](slides_files/figure-html/dp4_big-1.png)<!-- -->
+![](figure/dp4_big-1.png)<!-- -->
   </div>
   <div style="display: table-cell; vertical-align: top;">
   Median Time to Evaluate OLS

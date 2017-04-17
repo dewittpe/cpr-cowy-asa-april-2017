@@ -9,7 +9,7 @@ output:
   ioslides_presentation:
     keep_md: true
     template: template.html
-    logo: cpr-hex.png
+    logo: figure/cpr-hex.png
     css: style.css
     widescreen: true
     self_contained: false
