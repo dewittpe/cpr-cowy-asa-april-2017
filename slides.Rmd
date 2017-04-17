@@ -1,0 +1,51 @@
+---
+title: "cpr: An R package for finding parsimonious B-spline regression models via control polygon reduction"
+subtitle: "ASA Co/Wy Chapter - Spring 2017 Meeting"
+author:
+  Peter E. DeWitt <br>
+  <img src="figure/sph_biostatistics_4web.png"> <img width=250 src="figure/cuanschutz2.png">
+date: 21 April 2017
+output:
+  ioslides_presentation:
+    keep_md: true
+    template: template.html
+    logo: cpr-hex.png
+    css: style.css
+    widescreen: true
+    self_contained: false
+---
+
+```{r setup, include = FALSE, cache = FALSE}
+library(cpr)
+library(cprtesting)
+library(qwraps2)
+library(tidyverse)
+library(ggplot2)
+library(gridExtra)
+library(lme4)
+library(knitr) 
+opts_chunk$set(cache = TRUE, collapse = TRUE)
+
+options(tibble.print_max = 5, tibble.print_min = 5) 
+```
+
+
+# Outline
+<aside class="gdbar">
+<img width=120 height=120 src="figure/cpr-hex.png" align="middle"/>
+</aside>
+
+<ul style="padding-left: 100px;">
+<li>Motivation</li>
+<li>Control Polygon Reduction</li>
+<li>cpr package</li>
+</ul>
+
+```{r child="motivation.Rmd"}
+```
+
+```{r child="cpr-background.Rmd"}
+```
+
+```{r child="cpr-pkg.Rmd"}
+```

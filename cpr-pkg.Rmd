@@ -1,0 +1,164 @@
+# cpr: An R Package
+<aside class="gdbar">
+<img width=120 height=120 src="figure/cpr-hex.png" align="middle"/>
+</aside>
+
+## cpr tools
+The `cpr` package provides:
+
+1. A simulated data set based on SWAN DHS
+2. Tools for building and manipulating uni-variable and multi-variable B-splines.
+3. Tools for building and manipulating control polygons and control nets
+4. The `cpr` and `cnr` calls for running the control polygon reduction and
+   control net reduction.
+5. Lots of plotting and diagnostic tools.
+
+```{r}
+# Packages needed for the following examples
+library(cpr)
+library(tidyverse)
+library(lme4)
+```
+
+## Simulated Data Set
+```{r cpr_pkg_spdg_str}
+str(spdg)
+```
+
+<div style="position: absolute; right: 0px; bottom: 0px;">
+<img width=25px height=25px src="figure/thank-you-notes-512.png">
+</div>
+<div class="notes">
+```{r cpr_pkg_spdg, echo = FALSE, fig.width = 6, fig.height = 6}
+ggplot(spdg) +
+  aes(x = day, y = log10(pdg), group = id) +
+  geom_line(alpha = 0.1)
+```
+</div>
+
+## Build The Initial Control Polygon
+```{r init_cp4}
+init_cp4 <- cp(log10(pdg) ~ bsplines(day, df = 54) + (1 | id),
+               data = spdg, method = lmer)
+plot(init_cp4)
+```
+
+## Run CPR
+```{r cpr_run4}
+cpr_run4 <- cpr(init_cp4)
+```
+
+## Select a Model
+<div style="width: 100%; display: table;">
+  <div style="display: table-row">
+  <div style="display: table-cell; vertical-align: top;">
+```{r cpr_run4_plot_cps, fig.width = 5, fig.height = 5, fig.show = "hold"}
+plot(cpr_run4, color = TRUE)
+```
+  </div>
+  <div style="display: table-cell; vertical-align: top;">
+  <img width=50px height=200px src="figure/white-square.png">
+  </div>
+  <div style="display: table-cell; vertical-align: top;">
+```{r cpr_run4_plot_rmse, fig.width = 6.5, fig.height = 2.6}
+plot(cpr_run4, type = "rmse", to = 12)
+```
+  </div>
+  </div>
+</div>
+
+```{r cpr_run4_selected}
+selected_cp4 <- cpr_run4[[4]]
+```
+
+## Selected CP
+```{r cpr_run4_selected_str}
+str(selected_cp4)
+```
+
+## Selected CP
+```{r cpr_cp_methods}
+methods(class = "cpr_cp")
+```
+
+## Other Orders
+```{r cpr_other_orders}
+init_cp3 <- update_bsplines(init_cp4, df = 53, order = 3)
+init_cp2 <- update_bsplines(init_cp4, df = 52, order = 2)
+cpr_run3 <- cpr(init_cp3)
+cpr_run2 <- cpr(init_cp2)
+```
+
+```{r cpr_other_order_results_no_eval, ref.label = "cpr_other_order_results", echo = TRUE, eval = FALSE}
+```
+
+## Summaries
+```{r cpr_other_order_results, echo = FALSE}
+list(cpr_run4, cpr_run3, cpr_run2) %>%
+lapply(summary) %>%
+bind_rows(.id = "order") %>%
+mutate(order = factor(order, 1:3, c("4th", "3rd", "2nd"))) %>%
+filter(index < 13) %>%
+
+ggplot() +
+aes(x = dfs, y = rmse, color = order, linetype = order) +
+geom_path() +
+geom_point() 
+```
+
+```{r}
+# Preferable Model
+cpr_run3[[3]]
+```
+
+## Control Net Reduction
+```{r initial_cn}
+init_iknots <-
+  list(attr(cpr_run3[[3]], "iknots"),
+       trimmed_quantile(spdg$age, prob = 1:10 / 11, names = FALSE),
+       trimmed_quantile(spdg$ttm, prob = 1:10 / 11, names = FALSE))
+
+init_cn322 <-
+  cn(log10(pdg) ~ btensor(list(day, age, ttm), iknots = init_iknots, order = list(3, 2, 2)) + (1 | id),
+     data = spdg,
+     method = lmer)
+
+cnr_run <- cnr(init_cn322) 
+```
+
+## Control Net Reduction
+```{r cnr_run_plot}
+plot(cnr_run)
+```
+
+## Control Net Reduction
+```{r selected_cn}
+selected_cn <- cnr_run[[1]]
+str(selected_cn, max.level = 1)
+```
+
+## Control Net Reduction
+```{r selected_cn_age_ttm}
+plot(selected_cn,
+     xlab = "age", ylab = "ttm", zlab = "log10(pdg)",
+     show_net = FALSE, show_surface = TRUE,
+     get_surface_args = list(margin = 2:3, at = list(0.5, NA, NA)),
+     rgl = FALSE)
+```
+
+## Some Results from My Dissertation
+<iframe src="swan_rgl.html"></iframe>
+
+## Some Results from My Dissertation
+<iframe src="swan_animation_age_ttm.html"></iframe>
+
+## Download cpr
+
+- `cpr`: Control Polygon Reduction <img width=259 height=300 src="figure/cpr-hex.png" align = "right"/>
+    - https://cran.r-project.org/package=cpr
+    - https://github.com/dewittpe/cpr
+
+- Detailed examples are in vignette and standard documentation files.
+
+- Please test the package.  File bug reports at
+  https://github.com/dewittpe/cpr/issues
