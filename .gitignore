@@ -34,3 +34,4 @@ vignettes/*.pdf
 
 # vim temp files
 *.swp
+*.Rout
