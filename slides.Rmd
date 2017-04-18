@@ -29,21 +29,6 @@ opts_chunk$set(cache = TRUE, collapse = TRUE)
 options(tibble.print_max = 5, tibble.print_min = 5) 
 ```
 
-
-# Outline
-<aside class="gdbar">
-<img width=120 height=120 src="figure/cpr-hex.png" align="middle"/>
-</aside>
-
-<ul style="padding-left: 100px;">
-<li>Motivation</li>
-<li>Control Polygon Reduction</li>
-<li>cpr package</li>
-</ul>
-
-```{r child="motivation.Rmd"}
-```
-
 ```{r child="cpr-background.Rmd"}
 ```
 

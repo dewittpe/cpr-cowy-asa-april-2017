@@ -164,3 +164,6 @@ plot(selected_cn,
 
 - Please test the package.  File bug reports at
   https://github.com/dewittpe/cpr/issues
+
+- These slides are available at
+  https://github.com/dewittpe/cpr-cowy-asa-april-2017

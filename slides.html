@@ -102,108 +102,7 @@
           </hgroup>
   </slide>
 
-<slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>Outline</h2></hgroup><article  id="outline">
-
-<aside class="gdbar">
-
-<img width=120 height=120 src="figure/cpr-hex.png" align="middle"/>
-
-</aside>
-
-<ul style="padding-left: 100px;">
-
-<li>
-
-Motivation
-
-</li>
-
-<li>
-
-Control Polygon Reduction
-
-</li>
-
-<li>
-
-cpr package
-
-</li>
-
-</ul>
-
-</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>Motivation and Proposed Modeling Approach</h2></hgroup><article  id="motivation-and-proposed-modeling-approach">
-
-<aside class="gdbar">
-
-<img width=120 height=120 src="figure/cpr-hex.png" align="middle"/>
-
-</aside>
-
-</article></slide><slide class=''><hgroup><h2>Separating Aging from Menopause</h2></hgroup><article  id="separating-aging-from-menopause">
-
-<ul>
-<li>Motivated by a need to answer questions about aging and menopause.
-
-<ul>
-<li>How do reproductive hormone profiles change during the menopausal transition?</li>
-<li>What is the interaction between age and time-to-menopause?</li>
-<li>How do we model hormone profiles to allow for inference on the complex interactions between day-of-cycle, age, and time-to-menopause?</li>
-</ul></li>
-<li>Study of Women&#39;s Health Across the Nation (SWAN) <img width=300 height=85 src='figure/swan.png' align="right"/> Daily Hormone Study (DHS)
-
-<ul>
-<li>First evacuation urine sample every day for a full menstrual cycle.</li>
-<li>One cycle per year; stop collection one year post menopause or end of study.</li>
-</ul></li>
-</ul>
-
-</article></slide><slide class=''><hgroup><h2>Proposed Modeling Approach</h2></hgroup><article  id="proposed-modeling-approach">
-
-<ul>
-<li><p>Need a model to inform the relationship between reproductive hormone profiles with day, age, and time-to-menopause (TTM).</p></li>
-<li>Current analysis methods in the literature:
-
-<ul>
-<li>Singleton metrics, <em>e.g.</em>, AUC, peak level, cycle length, &#8230;</li>
-<li>Fail to capture the functional form of the hormone profiles</li>
-</ul></li>
-<li><p>Proposed Modeling Approach: \[ PDG \approx f(day, age, ttm) \] Model \(f\) via multi-variable B-splines.</p></li>
-</ul>
-
-</article></slide><slide class=''><hgroup><h2>B-Splines</h2></hgroup><article  id="b-splines">
-
-<ul>
-<li><p>An appropriate method for modeling unknown functional forms.</p></li>
-<li><p>Subject to the selection of a polynomial order and knot sequences</p></li>
-<li><p>Multi-variable B-splines can require a lot of degrees of freedom.</p></li>
-<li><p>Need to find a method for finding parsimonious regression models with a high quality of fit.</p></li>
-<li><p>Parsimony to alleviate over-fitting.</p></li>
-<li><p>Start with uni-variable B-splines and extend to multi-variable B-splines.</p></li>
-</ul>
-
-<div style="position: absolute; right: 0px; bottom: 0px;">
-<p><img width=25px height=25px src="figure/thank-you-notes-512.png"/></p></div>
-
-<aside class='note'><section><p><strong>Other modeling approaches:</strong></p>
-
-<ul>
-<li>P-Splines
-
-<ul>
-<li>Built on B-splines</li>
-<li>By design a lot of degrees of freedom</li>
-<li>Penalty for &quot;wiggliness&quot;</li>
-<li>Computationally expensive, especially for mixed effect models</li>
-</ul></li>
-<li>Smoothing Splines
-
-<ul>
-<li>As many regression parameters as unique data tuples</li>
-</ul></li>
-</ul></section></aside>
-
-</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>Control Polygon Reduction</h2></hgroup><article  id="control-polygon-reduction">
+<slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>Control Polygon Reduction</h2></hgroup><article  id="control-polygon-reduction">
 
 <aside class="gdbar">
 
@@ -894,6 +793,7 @@ str(selected_cn, max.level = 1)
 </ul></li>
 <li><p>Detailed examples are in vignette and standard documentation files.</p></li>
 <li><p>Please test the package. File bug reports at <a href='https://github.com/dewittpe/cpr/issues' title=''>https://github.com/dewittpe/cpr/issues</a></p></li>
+<li><p>These slides are available at <a href='https://github.com/dewittpe/cpr-cowy-asa-april-2017' title=''>https://github.com/dewittpe/cpr-cowy-asa-april-2017</a></p></li>
 </ul></article></slide>
 
 
