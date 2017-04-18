@@ -63,25 +63,27 @@ plot(cpr_run4, color = TRUE)
 ```{r cpr_run4_plot_rmse, fig.width = 6.5, fig.height = 2.6}
 plot(cpr_run4, type = "rmse", to = 12)
 ```
+```{r cpr_run4_selected}
+cpr_run4
+selected_cp4 <- cpr_run4[[4]]
+```
   </div>
   </div>
 </div>
 
-```{r cpr_run4_selected}
-selected_cp4 <- cpr_run4[[4]]
-```
 
 ## Selected CP
 ```{r cpr_run4_selected_str}
 str(selected_cp4)
 ```
 
-## Selected CP
+## Methods for `cpr_cp` Objects
 ```{r cpr_cp_methods}
 methods(class = "cpr_cp")
 ```
 
 ## Other Orders
+CPR is fast, consider other polynomial orders to help find parsimonious models.
 ```{r cpr_other_orders}
 init_cp3 <- update_bsplines(init_cp4, df = 53, order = 3)
 init_cp2 <- update_bsplines(init_cp4, df = 52, order = 2)
@@ -103,11 +105,11 @@ filter(index < 13) %>%
 ggplot() +
 aes(x = dfs, y = rmse, color = order, linetype = order) +
 geom_path() +
-geom_point() 
+geom_point()   # Graphic on the next slide
 ```
 
-```{r}
-# Preferable Model
+```{r, eval = FALSE}
+# Preferable Model  (index and dfs are not the same thing)
 cpr_run3[[3]]
 ```
 
@@ -143,7 +145,7 @@ plot(selected_cn,
      xlab = "age", ylab = "ttm", zlab = "log10(pdg)",
      show_net = FALSE, show_surface = TRUE,
      get_surface_args = list(margin = 2:3, at = list(0.5, NA, NA)),
-     rgl = FALSE)
+     rgl = FALSE)  # plots with rgl by default, plot3D if rgl = FALSE
 ```
 
 ## Some Results from My Dissertation
