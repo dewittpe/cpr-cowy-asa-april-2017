@@ -13,11 +13,13 @@ The `cpr` package provides:
    control net reduction.
 5. Lots of plotting and diagnostic tools.
 
-```{r}
-# Packages needed for the following examples
-library(cpr)
-library(tidyverse)
-library(lme4)
+## Overview | Data -- Initial Model -- CPR -- Selection of Preferable Model
+```{r, eval = FALSE}
+# Outline for CPR use
+init_cp <- cp(y ~ bsplines(x))  # initial control polygon
+cpr_run <- cpr(init_cp)         # run CPR
+plot(cpr_run)                   # plots to help you select a model
+selected_cp <- cpr_run[[4]]     # sected model
 ```
 
 ## Simulated Data Set
@@ -37,11 +39,31 @@ ggplot(spdg) +
 </div>
 
 ## Build The Initial Control Polygon
-```{r init_cp4}
+<div style="width: 100%; display: table;">
+  <div style="display: table-row">
+  <div style="display: table-cell; vertical-align: top;">
+```{r init_cp4, fig.show = "hide"}
+# Packages needed for the following examples
+library(cpr)
+library(tidyverse)
+library(lme4)
+
+# initial control polygon, 4th order B-splines
 init_cp4 <- cp(log10(pdg) ~ bsplines(day, df = 54) + (1 | id),
                data = spdg, method = lmer)
 plot(init_cp4)
 ```
+  </div>
+  <div style="display: table-cell; vertical-align: top;">
+  </div>
+  <div style="display: table-cell; vertical-align: top;">
+```{r init_cp_plot, echo = FALSE, fig.width = 3, fig.height = 3}
+plot(init_cp4)
+```
+  </div>
+  </div>
+</div>
+
 
 ## Run CPR
 ```{r cpr_run4}
@@ -60,7 +82,7 @@ plot(cpr_run4, color = TRUE)
   <img width=50px height=200px src="figure/white-square.png">
   </div>
   <div style="display: table-cell; vertical-align: top;">
-```{r cpr_run4_plot_rmse, fig.width = 6.5, fig.height = 2.6}
+```{r cpr_run4_plot_rmse, fig.width = 4.5, fig.height = 2.6}
 plot(cpr_run4, type = "rmse", to = 12)
 ```
 ```{r cpr_run4_selected}
@@ -113,29 +135,24 @@ geom_point()   # Graphic on the next slide
 cpr_run3[[3]]
 ```
 
-## Control Net Reduction
-```{r initial_cn}
-init_iknots <-
+## Control Net Reduction | Extend CPR From Uni-Variable B-Splines to Multi-Variable B-Splines
+```{r initial_cn, fig.show = "hide"}
+init_iknots <-                                          # initial knot locations
   list(attr(cpr_run3[[3]], "iknots"),
        trimmed_quantile(spdg$age, prob = 1:10 / 11, names = FALSE),
        trimmed_quantile(spdg$ttm, prob = 1:10 / 11, names = FALSE))
 
-init_cn322 <-
+init_cn322 <-                                           # initial control net
   cn(log10(pdg) ~ btensor(list(day, age, ttm), iknots = init_iknots, order = list(3, 2, 2)) + (1 | id),
-     data = spdg,
-     method = lmer)
+     data = spdg, method = lmer)
 
-cnr_run <- cnr(init_cn322) 
-```
-
-## Control Net Reduction
-```{r cnr_run_plot}
-plot(cnr_run)
+cnr_run <- cnr(init_cn322, margin = 2:3) # apply CNR over age and ttm only 
+plot(cnr_run)                            # plot rmse by index 
+selected_cn <- cnr_run[[1]]              # select a model
 ```
 
 ## Control Net Reduction
 ```{r selected_cn}
-selected_cn <- cnr_run[[1]]
 str(selected_cn, max.level = 1)
 ```
 

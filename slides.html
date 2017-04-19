@@ -609,10 +609,13 @@ PSLN
 <li>Lots of plotting and diagnostic tools.</li>
 </ol>
 
-<pre class = 'prettyprint lang-r'># Packages needed for the following examples
-library(cpr)
-library(tidyverse)
-library(lme4)</pre>
+</article></slide><slide class=''><hgroup><h2>Overview </h2><h3> Data &#8211; Initial Model &#8211; CPR &#8211; Selection of Preferable Model</h3></hgroup><article  id="overview-data----initial-model----cpr----selection-of-preferable-model">
+
+<pre class = 'prettyprint lang-r'># Outline for CPR use
+init_cp &lt;- cp(y ~ bsplines(x))  # initial control polygon
+cpr_run &lt;- cpr(init_cp)         # run CPR
+plot(cpr_run)                   # plots to help you select a model
+selected_cp &lt;- cpr_run[[4]]     # sected model</pre>
 
 </article></slide><slide class=''><hgroup><h2>Simulated Data Set</h2></hgroup><article  id="simulated-data-set">
 
@@ -635,11 +638,24 @@ library(lme4)</pre>
 
 </article></slide><slide class=''><hgroup><h2>Build The Initial Control Polygon</h2></hgroup><article  id="build-the-initial-control-polygon">
 
-<pre class = 'prettyprint lang-r'>init_cp4 &lt;- cp(log10(pdg) ~ bsplines(day, df = 54) + (1 | id),
-               data = spdg, method = lmer)
-plot(init_cp4)</pre>
+<div style="width: 100%; display: table;">
+<div style="display: table-row">
+<div style="display: table-cell; vertical-align: top;">
+<pre class = 'prettyprint lang-r'># Packages needed for the following examples
+library(cpr)
+library(tidyverse)
+library(lme4)
 
-<p><img src='slides_files/figure-html/init_cp4-1.png' title=''/><!-- --></p>
+# initial control polygon, 4th order B-splines
+init_cp4 &lt;- cp(log10(pdg) ~ bsplines(day, df = 54) + (1 | id),
+               data = spdg, method = lmer)
+plot(init_cp4)</pre></div>
+
+<div style="display: table-cell; vertical-align: top;">
+</div>
+
+<div style="display: table-cell; vertical-align: top;">
+<img src='slides_files/figure-html/init_cp_plot-1.png' title=''/><!-- --></div></div></div>
 
 </article></slide><slide class=''><hgroup><h2>Run CPR</h2></hgroup><article  id="run-cpr">
 
@@ -724,30 +740,24 @@ geom_point()   # Graphic on the next slide</pre>
 <pre class = 'prettyprint lang-r'># Preferable Model  (index and dfs are not the same thing)
 cpr_run3[[3]]</pre>
 
-</article></slide><slide class=''><hgroup><h2>Control Net Reduction</h2></hgroup><article  id="control-net-reduction">
+</article></slide><slide class=''><hgroup><h2>Control Net Reduction </h2><h3> Extend CPR From Uni-Variable B-Splines to Multi-Variable B-Splines</h3></hgroup><article  id="control-net-reduction-extend-cpr-from-uni-variable-b-splines-to-multi-variable-b-splines">
 
-<pre class = 'prettyprint lang-r'>init_iknots &lt;-
+<pre class = 'prettyprint lang-r'>init_iknots &lt;-                                          # initial knot locations
   list(attr(cpr_run3[[3]], &quot;iknots&quot;),
        trimmed_quantile(spdg$age, prob = 1:10 / 11, names = FALSE),
        trimmed_quantile(spdg$ttm, prob = 1:10 / 11, names = FALSE))
 
-init_cn322 &lt;-
+init_cn322 &lt;-                                           # initial control net
   cn(log10(pdg) ~ btensor(list(day, age, ttm), iknots = init_iknots, order = list(3, 2, 2)) + (1 | id),
-     data = spdg,
-     method = lmer)
+     data = spdg, method = lmer)
 
-cnr_run &lt;- cnr(init_cn322) </pre>
+cnr_run &lt;- cnr(init_cn322, margin = 2:3) # apply CNR over age and ttm only 
+plot(cnr_run)                            # plot rmse by index 
+selected_cn &lt;- cnr_run[[1]]              # select a model</pre>
 
-</article></slide><slide class=''><hgroup><h2>Control Net Reduction</h2></hgroup><article  id="control-net-reduction-1">
+</article></slide><slide class=''><hgroup><h2>Control Net Reduction</h2></hgroup><article  id="control-net-reduction">
 
-<pre class = 'prettyprint lang-r'>plot(cnr_run)</pre>
-
-<p><img src='slides_files/figure-html/cnr_run_plot-1.png' title=''/><!-- --></p>
-
-</article></slide><slide class=''><hgroup><h2>Control Net Reduction</h2></hgroup><article  id="control-net-reduction-2">
-
-<pre class = 'prettyprint lang-r'>selected_cn &lt;- cnr_run[[1]]
-str(selected_cn, max.level = 1)
+<pre class = 'prettyprint lang-r'>str(selected_cn, max.level = 1)
 ## List of 9
 ##  $ cn          :Classes &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:    12 obs. of  4 variables:
 ##  $ bspline_list:List of 3
@@ -760,7 +770,7 @@ str(selected_cn, max.level = 1)
 ##  $ rmse        : num 0.3
 ##  - attr(*, &quot;class&quot;)= chr [1:2] &quot;cpr_cn&quot; &quot;list&quot;</pre>
 
-</article></slide><slide class=''><hgroup><h2>Control Net Reduction</h2></hgroup><article  id="control-net-reduction-3">
+</article></slide><slide class=''><hgroup><h2>Control Net Reduction</h2></hgroup><article  id="control-net-reduction-1">
 
 <pre class = 'prettyprint lang-r'>plot(selected_cn,
      xlab = &quot;age&quot;, ylab = &quot;ttm&quot;, zlab = &quot;log10(pdg)&quot;,
