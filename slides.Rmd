@@ -34,3 +34,13 @@ options(tibble.print_max = 5, tibble.print_min = 5)
 
 ```{r child="cpr-pkg.Rmd"}
 ```
+
+# Appendix
+<aside class="gdbar">
+<img width=120 height=120 src="figure/cpr-hex.png" align="middle"/>
+</aside> 
+```{r child="influence.Rmd"}
+```
+
+```{r child="cnr-appendix.Rmd"}
+```

@@ -1,0 +1,29 @@
+## Control Net Reduction | Extend CPR From Uni-Variable B-Splines to Multi-Variable B-Splines
+```{r initial_cn, fig.show = "hide"}
+init_iknots <-                                          # initial knot locations
+  list(attr(cpr_run3[[3]], "iknots"),
+       trimmed_quantile(spdg$age, prob = 1:10 / 11, names = FALSE),
+       trimmed_quantile(spdg$ttm, prob = 1:10 / 11, names = FALSE))
+
+init_cn322 <-                                           # initial control net
+  cn(log10(pdg) ~ btensor(list(day, age, ttm), iknots = init_iknots, order = list(3, 2, 2)) + (1 | id),
+     data = spdg, method = lmer)
+
+cnr_run <- cnr(init_cn322, margin = 2:3) # apply CNR over age and ttm only 
+plot(cnr_run)                            # plot rmse by index 
+selected_cn <- cnr_run[[1]]              # select a model
+```
+
+## Control Net Reduction
+```{r selected_cn}
+str(selected_cn, max.level = 1)
+```
+
+## Control Net Reduction
+```{r selected_cn_age_ttm}
+plot(selected_cn,
+     xlab = "age", ylab = "ttm", zlab = "log10(pdg)",
+     show_net = FALSE, show_surface = TRUE,
+     get_surface_args = list(margin = 2:3, at = list(0.5, NA, NA)),
+     rgl = FALSE)  # plots with rgl by default, plot3D if rgl = FALSE
+```
